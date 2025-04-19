@@ -1,15 +1,16 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using MyApp.Models;
 
-namespace WebAppWeb.Data
+namespace MyApp.Data
 {
     public class ApplicationDBContext : DbContext
     {
         public ApplicationDBContext(DbContextOptions<ApplicationDBContext> options)
-            :base(options)
+            : base(options)
         {
-                
         }
 
-        public DbSet<WebAppWeb.Models.Category> Categories { get; set; }
+        public DbSet<Category> Categories { get; set; } 
+
     }
 }

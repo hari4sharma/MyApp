@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using WebAppWeb.Data;
-using WebAppWeb.Models;
+using MyApp.Data;
+using MyApp.Models;
 
-namespace WebAppWeb.Controllers
+namespace WebApp.Controllers
 {
     public class CategoryController : Controller
     {
