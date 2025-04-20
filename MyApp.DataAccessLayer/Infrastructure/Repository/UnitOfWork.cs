@@ -13,12 +13,15 @@ namespace MyApp.DataAccessLayer.Infrastructure.Repository
     {
         public ICategoryRepository Category { get; private set; }
 
+        public IProductRepository Product { get; private set; }
+
         private readonly ApplicationDBContext _context;
 
         public UnitOfWork(ApplicationDBContext context)
         {
             _context = context;
             Category = new CategoryRepository(_context);
+            Product = new ProductRepository(_context);
         }
 
         public void save()

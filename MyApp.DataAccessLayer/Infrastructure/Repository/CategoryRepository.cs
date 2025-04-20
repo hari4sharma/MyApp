@@ -18,6 +18,12 @@ namespace MyApp.DataAccessLayer.Infrastructure.Repository
         }
         public void Update(Category obj)
         {
+            var objFromDb = _context.Categories.FirstOrDefault(u => u.Id == obj.Id);
+            if (objFromDb != null)
+            {
+                objFromDb.Name = obj.Name;
+                objFromDb.DisplayOrder = obj.DisplayOrder;
+            }
             _context.Categories.Update(obj);
         }
     }

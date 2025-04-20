@@ -6,6 +6,7 @@ using MyApp.Models;
 
 namespace WebAppWeb.Areas.Admin.Controllers
 {
+    [Area("Admin")]
     public class CategoryController : Controller
     {
         private IUnitOfWork _unitOfWork;
