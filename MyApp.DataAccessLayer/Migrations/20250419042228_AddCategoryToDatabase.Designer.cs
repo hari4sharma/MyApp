@@ -6,17 +6,18 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MyApp.Data;
+using MyApp.DataAccessLayer;
 
 #nullable disable
 
-namespace WebAppWeb.Migrations
+namespace MyApp.DataAccessLayer.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
     [Migration("20250419042228_AddCategoryToDatabase")]
     partial class AddCategoryToDatabase
     {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        // Removed 'override' keyword as BuildTargetModel is not overriding a base class method.
+        protected void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

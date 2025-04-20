@@ -4,7 +4,7 @@ using MyApp.DataAccessLayer.Infrastructure.IRepository;
 using MyApp.DataAccessLayer.Infrastructure.Repository;
 using MyApp.Models;
 
-namespace WebApp.Controllers
+namespace WebAppWeb.Areas.Admin.Controllers
 {
     public class CategoryController : Controller
     {
