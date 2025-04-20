@@ -24,7 +24,7 @@ namespace MyApp.DataAccessLayer.Infrastructure.Repository
                 objFromDb.Name = obj.Name;
                 objFromDb.DisplayOrder = obj.DisplayOrder;
             }
-            _context.Categories.Update(obj);
+            _context.Categories.Update(objFromDb);
         }
     }
 }

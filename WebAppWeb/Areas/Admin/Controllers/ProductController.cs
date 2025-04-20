@@ -4,30 +4,41 @@ using MyApp.DataAccessLayer.Infrastructure.IRepository;
 using MyApp.DataAccessLayer.Infrastructure.Repository;
 using MyApp.Models;
 using MyApp.Models.ViewModels;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace WebAppWeb.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    public class CategoryController : Controller
+    public class ProductController : Controller
     {
         private IUnitOfWork _unitOfWork;
 
-        public CategoryController(IUnitOfWork unitOfWork)
+        public ProductController(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
         }
 
         public IActionResult Index()
         {
-            CategoryVM categoryVM = new CategoryVM();
-            categoryVM.categories = _unitOfWork.Category.GetAll();
-            return View(categoryVM);
+            ProductVM productVM = new ProductVM();
+            productVM.Products = _unitOfWork.Product.GetAll();
+            return View(productVM);
         }
 
         [HttpGet]
         public IActionResult CreateUpdate(int? id)
         {
-            CategoryVM vm = new CategoryVM();
+            ProductVM vm = new ProductVM()
+            {
+                Product = new(),
+                Categories = _unitOfWork.Category.GetAll().Select(x => 
+                new SelectListItem()
+                {
+                    Value = x.Id.ToString(),
+                    Text =  x.Name 
+                })
+            };
+            
             if (id == null || id == 0)
             {
                 return View(vm);
@@ -35,8 +46,8 @@ namespace WebAppWeb.Areas.Admin.Controllers
             //Edit
             else
             {
-                vm.Category = _unitOfWork.Category.Get(x => x.Id == id);
-                if (vm.Category == null)
+                vm.Product = _unitOfWork.Product.Get(x => x.Id == id);
+                if (vm.Product == null)
                 {
                     return NotFound();
                 }
@@ -49,19 +60,19 @@ namespace WebAppWeb.Areas.Admin.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult CreateUpdate(CategoryVM vm)
+        public IActionResult CreateUpdate(ProductVM vm)
         {
             if (ModelState.IsValid)
             {
-                if(vm.Category.Id == 0)
+                if(vm.Product.Id == 0)
                 {
-                    _unitOfWork.Category.Add(vm.Category);
-                    TempData["Success"] = "Category Created Done!";
+                    _unitOfWork.Product.Add(vm.Product);
+                    TempData["Success"] = "Product Created Done!";
                 }
                 else
                 {
-                    _unitOfWork.Category.Update(vm.Category);
-                    TempData["Success"] = "Category updated Done!";
+                    _unitOfWork.Product.Update(vm.Product);
+                    TempData["Success"] = "Product updated Done!";
                 }    
                 _unitOfWork.save();
                 
@@ -77,26 +88,26 @@ namespace WebAppWeb.Areas.Admin.Controllers
             {
                 return NotFound();
             }
-            var categoryFromDb = _unitOfWork.Category.Get(x => x.Id == id);
-            if (categoryFromDb == null)
+            var ProductFromDb = _unitOfWork.Product.Get(x => x.Id == id);
+            if (ProductFromDb == null)
             {
                 return NotFound();
             }
-            return View(categoryFromDb);
+            return View(ProductFromDb);
         }
 
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public IActionResult DeleteData(int? id)
         {
-            var categoryFromDb = _unitOfWork.Category.Get(x => x.Id == id);
-            if (categoryFromDb == null)
+            var ProductFromDb = _unitOfWork.Product.Get(x => x.Id == id);
+            if (ProductFromDb == null)
             {
                 return NotFound();
             }
-            _unitOfWork.Category.Delete(categoryFromDb);
+            _unitOfWork.Product.Delete(ProductFromDb);
             _unitOfWork.save();
-            TempData["Success"] = "Category Deleted Done!";
+            TempData["Success"] = "Product Deleted Done!";
             return RedirectToAction("Index");
         }
     }
