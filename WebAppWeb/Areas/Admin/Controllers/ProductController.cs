@@ -12,10 +12,12 @@ namespace WebAppWeb.Areas.Admin.Controllers
     public class ProductController : Controller
     {
         private IUnitOfWork _unitOfWork;
+        private IWebHostEnvironment _webHostEnvironment;
 
-        public ProductController(IUnitOfWork unitOfWork)
+        public ProductController(IUnitOfWork unitOfWork, IWebHostEnvironment webHostEnvironment)
         {
             _unitOfWork = unitOfWork;
+            _webHostEnvironment = webHostEnvironment;
         }
 
         public IActionResult Index()
@@ -31,14 +33,14 @@ namespace WebAppWeb.Areas.Admin.Controllers
             ProductVM vm = new ProductVM()
             {
                 Product = new(),
-                Categories = _unitOfWork.Category.GetAll().Select(x => 
+                Categories = _unitOfWork.Category.GetAll().Select(x =>
                 new SelectListItem()
                 {
                     Value = x.Id.ToString(),
-                    Text =  x.Name 
+                    Text = x.Name
                 })
             };
-            
+
             if (id == null || id == 0)
             {
                 return View(vm);
@@ -59,12 +61,25 @@ namespace WebAppWeb.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult CreateUpdate(ProductVM vm)
+        //[ValidateAntiForgeryToken]
+        public IActionResult CreateUpdate(ProductVM vm, IFormFile? file)
         {
             if (ModelState.IsValid)
             {
-                if(vm.Product.Id == 0)
+                string filename = string.Empty;
+                if (file != null)
+                {
+                    string uploadDir = Path.Combine(_webHostEnvironment.WebRootPath, "ProductImage");
+                    filename = Guid.NewGuid().ToString() + "_" + file.FileName;
+                    string filepath = Path.Combine(uploadDir, filename);
+                    using (var fileStream = new FileStream(filepath, FileMode.Create))
+                    {
+                        file.CopyTo(fileStream);
+                    }
+                    vm.Product.ImageUrl = @"\ProductImage\" + filename;
+                }
+                
+                if (vm.Product.Id == 0)
                 {
                     _unitOfWork.Product.Add(vm.Product);
                     TempData["Success"] = "Product Created Done!";
@@ -73,9 +88,9 @@ namespace WebAppWeb.Areas.Admin.Controllers
                 {
                     _unitOfWork.Product.Update(vm.Product);
                     TempData["Success"] = "Product updated Done!";
-                }    
+                }
                 _unitOfWork.save();
-                
+
                 return RedirectToAction("Index");
             }
             return RedirectToAction("Index");
