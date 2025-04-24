@@ -20,11 +20,21 @@ namespace WebAppWeb.Areas.Admin.Controllers
             _webHostEnvironment = webHostEnvironment;
         }
 
+        #region APICall
+        [HttpGet]
+        public IActionResult AllProducts()
+        {
+            var products = _unitOfWork.Product.GetAll(includeProperties: "category");
+            return Json(new { data = products });
+        } 
+
+        #endregion
+
         public IActionResult Index()
         {
-            ProductVM productVM = new ProductVM();
-            productVM.Products = _unitOfWork.Product.GetAll();
-            return View(productVM);
+            //ProductVM productVM = new ProductVM();
+            //productVM.Products = _unitOfWork.Product.GetAll();
+            return View();
         }
 
         [HttpGet]
@@ -72,13 +82,21 @@ namespace WebAppWeb.Areas.Admin.Controllers
                     string uploadDir = Path.Combine(_webHostEnvironment.WebRootPath, "ProductImage");
                     filename = Guid.NewGuid().ToString() + "_" + file.FileName;
                     string filepath = Path.Combine(uploadDir, filename);
+                    if(vm.Product.ImageUrl != null)
+                    {
+                        var oldImagePath = Path.Combine(_webHostEnvironment.WebRootPath, vm.Product.ImageUrl.TrimStart('\\'));
+                        if (System.IO.File.Exists(oldImagePath))
+                        {
+                            System.IO.File.Delete(oldImagePath);
+                        }
+                    }
                     using (var fileStream = new FileStream(filepath, FileMode.Create))
                     {
                         file.CopyTo(fileStream);
                     }
                     vm.Product.ImageUrl = @"\ProductImage\" + filename;
                 }
-                
+
                 if (vm.Product.Id == 0)
                 {
                     _unitOfWork.Product.Add(vm.Product);

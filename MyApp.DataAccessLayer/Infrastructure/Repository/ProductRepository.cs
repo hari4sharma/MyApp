@@ -34,7 +34,7 @@ namespace MyApp.DataAccessLayer.Infrastructure.Repository
                     objFromDb.ImageUrl = objFromDb.ImageUrl;
                 }
             }
-            _context.Products.Update(obj);
+            //_context.Products.Update(obj);
         }
     }
 }

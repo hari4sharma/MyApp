@@ -16,6 +16,7 @@
 </div>
 <form method="post" asp-action="CreateUpdate" enctype="multipart/form-data">
     <input type="hidden" asp-for="Product.Id" />
+    <input type="hidden" asp-for="Product.ImageUrl" />
     <div asp-validation-summary="All"></div>
     <div>
         <div class="mb-3">
