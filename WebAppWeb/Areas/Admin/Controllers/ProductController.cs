@@ -114,34 +114,43 @@ namespace WebAppWeb.Areas.Admin.Controllers
             return RedirectToAction("Index");
         }
 
-        [HttpGet]
+        //[HttpGet]
+        //public IActionResult Delete(int? id)
+        //{
+        //    if (id == null || id == 0)
+        //    {
+        //        return NotFound();
+        //    }
+        //    var ProductFromDb = _unitOfWork.Product.Get(x => x.Id == id);
+        //    if (ProductFromDb == null)
+        //    {
+        //        return NotFound();
+        //    }
+        //    return View(ProductFromDb);
+        //}
+
+        #region Delete API
+        [HttpDelete]
         public IActionResult Delete(int? id)
         {
-            if (id == null || id == 0)
-            {
-                return NotFound();
-            }
             var ProductFromDb = _unitOfWork.Product.Get(x => x.Id == id);
             if (ProductFromDb == null)
             {
-                return NotFound();
+                return Json(new { success = false, message = "Error while deleting" });
             }
-            return View(ProductFromDb);
-        }
+            else
+            {
+                var oldImagePath = Path.Combine(_webHostEnvironment.WebRootPath, ProductFromDb.ImageUrl.TrimStart('\\'));
+                if (System.IO.File.Exists(oldImagePath))
+                {
+                    System.IO.File.Delete(oldImagePath);
+                }
 
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public IActionResult DeleteData(int? id)
-        {
-            var ProductFromDb = _unitOfWork.Product.Get(x => x.Id == id);
-            if (ProductFromDb == null)
-            {
-                return NotFound();
+                _unitOfWork.Product.Delete(ProductFromDb);
+                _unitOfWork.save();
+                return Json(new { success = true, message = "Delete Successfully" });
             }
-            _unitOfWork.Product.Delete(ProductFromDb);
-            _unitOfWork.save();
-            TempData["Success"] = "Product Deleted Done!";
-            return RedirectToAction("Index");
         }
+        #endregion
     }
 }
