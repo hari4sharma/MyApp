@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using MyApp.DataAccessLayer.Infrastructure.IRepository;
 using MyApp.DataAccessLayer.Infrastructure.Repository;
 using MyApp.Models;
+using MyApp.Models.ViewModels;
 
 namespace WebAppWeb.Areas.Customer.Controllers
 {
@@ -18,11 +19,21 @@ namespace WebAppWeb.Areas.Customer.Controllers
             _logger = logger;
             _unitOfWork = unitOfWork;
         }
-
+        [HttpGet]
         public IActionResult Index()
         {
             IEnumerable<Product> productList = _unitOfWork.Product.GetAll(includeProperties: "category");
             return View(productList);
+        }
+        [HttpGet]
+        public IActionResult Details(int? id)
+        {
+            Cart cart = new Cart()
+            {
+                Product = _unitOfWork.Product.Get(x => x.Id == id, includeProperties: "category"),
+                Count = 1
+            };
+            return View(cart);
         }
 
         public IActionResult Privacy()

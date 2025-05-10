@@ -1,0 +1,23 @@
+﻿@model MyApp.Models.ViewModels.Cart
+<h1>Cart Details</h1>
+<form method="post">
+    <div class="row">
+        <div class="col-6">
+            <img src="@Model.Product.ImageUrl" class="img-fluid" alt="Product Image">
+        </div>
+        <div class="col-6">
+            <h2>@Model.Product.Name</h2>
+            <h2>@Model.Product.Description</h2>
+            <p>Technology : @Model.Product.category.Name</p>
+            <p>Price: @Model.Product.Price.ToString("0.00")</p>
+            <p>Quantity: @Model.Count</p>
+            <div class="form-control">
+                <label asp-for="Count"></label>
+                <input asp-for="Count" class="form-control" />
+            </div>
+
+            <p>Total: @(Model.Product.Price * Model.Count).ToString("0.00")</p>
+            <button type="submit" class="btn btn-primary">Add To Cart</button>
+        </div>
+    </div>
+</form>

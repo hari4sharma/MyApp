@@ -19,6 +19,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 using MyApp.CommonHelper;
+using MyApp.Models;
 
 namespace WebAppWeb.Areas.Identity.Pages.Account
 {
@@ -101,12 +102,21 @@ namespace WebAppWeb.Areas.Identity.Pages.Account
             [Display(Name = "Confirm password")]
             [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
             public string ConfirmPassword { get; set; }
+
+            [Required]
+            public string Name { get; set; }
+            [Required]
+            public string Phone { get; set; }
+            public string? Address { get; set; }
+            public string? City { get; set; }
+            public string? State { get; set; }
+            public string? PinCode { get; set; }
         }
 
 
         public async Task OnGetAsync(string returnUrl = null)
         {
-            if(!_roleManager.RoleExistsAsync(WebSiteRoles.Role_Admin).GetAwaiter().GetResult())
+            if (!_roleManager.RoleExistsAsync(WebSiteRoles.Role_Admin).GetAwaiter().GetResult())
             {
                 _roleManager.CreateAsync(new IdentityRole(WebSiteRoles.Role_Admin)).GetAwaiter().GetResult();
                 _roleManager.CreateAsync(new IdentityRole(WebSiteRoles.Role_User)).GetAwaiter().GetResult();
@@ -127,6 +137,13 @@ namespace WebAppWeb.Areas.Identity.Pages.Account
 
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
+                user.Name = Input.Name;
+                user.Address = Input.Address;
+                user.PhoneNumber = Input.Phone;
+                user.State = Input.State;
+                user.PinCode = Input.PinCode;
+                user.City = Input.City;
+
                 var result = await _userManager.CreateAsync(user, Input.Password);
 
                 if (result.Succeeded)
@@ -165,11 +182,11 @@ namespace WebAppWeb.Areas.Identity.Pages.Account
             return Page();
         }
 
-        private IdentityUser CreateUser()
+        private ApplicationUser CreateUser()
         {
             try
             {
-                return Activator.CreateInstance<IdentityUser>();
+                return Activator.CreateInstance<ApplicationUser>();
             }
             catch
             {
