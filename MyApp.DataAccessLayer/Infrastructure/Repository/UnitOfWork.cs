@@ -15,6 +15,10 @@ namespace MyApp.DataAccessLayer.Infrastructure.Repository
 
         public IProductRepository Product { get; private set; }
 
+        public IApplicationUser ApplicationUser { get; protected set; }
+
+        public ICartReposotory CartReposotory { get; protected set; }
+
         private readonly ApplicationDBContext _context;
 
         public UnitOfWork(ApplicationDBContext context)
@@ -22,6 +26,8 @@ namespace MyApp.DataAccessLayer.Infrastructure.Repository
             _context = context;
             Category = new CategoryRepository(_context);
             Product = new ProductRepository(_context);
+            CartReposotory = new CartRepository(_context);
+            ApplicationUser = new ApplicationUserRepository(_context);
         }
 
         public void save()

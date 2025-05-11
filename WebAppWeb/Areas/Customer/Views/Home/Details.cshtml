@@ -1,4 +1,4 @@
-﻿@model MyApp.Models.ViewModels.Cart
+﻿@model MyApp.Models.Cart
 <h1>Cart Details</h1>
 <form method="post">
     <div class="row">
@@ -17,7 +17,11 @@
             </div>
 
             <p>Total: @(Model.Product.Price * Model.Count).ToString("0.00")</p>
-            <button type="submit" class="btn btn-primary">Add To Cart</button>
+            
+            <div class="form-control">
+                <a class="btn btn-primary" asp-action="Index" asp-controller="Home"><i class="bi bi-arrow-left-circle"></i> Back to List</a>
+                <button type="submit" class="btn btn-dark">Add To Cart</button>
+            </div>
         </div>
     </div>
 </form>
