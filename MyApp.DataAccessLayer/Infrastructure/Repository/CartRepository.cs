@@ -1,4 +1,5 @@
-﻿using MyApp.Data;
+﻿using Azure.Core;
+using MyApp.Data;
 using MyApp.DataAccessLayer.Infrastructure.IRepository;
 using MyApp.Models;
 using System;
@@ -17,5 +18,10 @@ namespace MyApp.DataAccessLayer.Infrastructure.Repository
             _context = context;
         }
 
+        public int IncrementCartItem(Cart cart, int count)
+        {
+            cart.Count += count;
+            return cart.Count;
+        }
     }
 }

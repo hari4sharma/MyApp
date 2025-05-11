@@ -4,6 +4,7 @@
     <div class="row">
         <div class="col-6">
             <img src="@Model.Product.ImageUrl" class="img-fluid" alt="Product Image">
+            <input type="hidden" asp-for="@Model.ProductId" />
         </div>
         <div class="col-6">
             <h2>@Model.Product.Name</h2>
